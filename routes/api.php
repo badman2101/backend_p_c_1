@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRegisterCourseController;
+use App\Http\Controllers\ComplainsController;
 
 
 /*
@@ -25,3 +26,7 @@ Route::post('/login',[LoginController::class,'login']);
 Route::post('/register',[LoginController::class,'register']);
 Route::apiResource('/users',UserController::class);
 Route::post('/change_password',[UserController::class,'changePassword']);
+
+Route::patch('/complains/{id}/assign', [ComplainsController::class, 'assignTo']);
+Route::patch('/complains/{id}/status', [ComplainsController::class, 'changeStatus']);
+Route::apiResource('/complains', ComplainsController::class);

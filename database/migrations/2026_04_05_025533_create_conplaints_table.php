@@ -20,8 +20,8 @@ class CreateConplaintsTable extends Migration
             $table->string('type'); //loại khiếu nại
             $table->foreignId('assigned_to')->constrained('users'); //phân công người giải quyết    
             $table->string('status'); //trạng thái
-            $table->date('deadline'); //ngày hết hạn
-            $table->string('result'); //kết quả giải quyết
+            $table->date('deadline')->nullable(); //ngày hết hạn
+            $table->string('result')->nullable(); //kết quả giải quyết
             $table->timestamps(); //ngày tạo và ngày cập nhật
         });
     }
