@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRegisterCourseController;
 use App\Http\Controllers\ComplainsController;
+use App\Http\Controllers\DonthuController;
 
 
 /*
@@ -30,3 +31,6 @@ Route::post('/change_password',[UserController::class,'changePassword']);
 Route::patch('/complains/{id}/assign', [ComplainsController::class, 'assignTo']);
 Route::patch('/complains/{id}/status', [ComplainsController::class, 'changeStatus']);
 Route::apiResource('/complains', ComplainsController::class);
+
+// API quản lý đơn thư: GET/POST /api/donthu, GET/PUT/PATCH/DELETE /api/donthu/{id}
+Route::apiResource('/donthu', DonthuController::class);
