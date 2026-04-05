@@ -1,7 +1,9 @@
 <?php
-// File: api/assets.php
-$queries = array();
-parse_str($_SERVER['QUERY_STRING'], $queries);
-$file = $queries['file'];
 
-echo require __DIR__ . '/../' . $file;
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = require_once __DIR__ . '/../bootstrap/app.php';
+
+$app->make(Illuminate\Contracts\Http\Kernel::class)
+    ->handle(Illuminate\Http\Request::capture())
+    ->send();
