@@ -19,12 +19,13 @@ class CreateDonthuTable extends Migration
             $table->string('phan_loai')->nullable();
             $table->string('nguon_tin')->nullable();
             $table->string('information_nguoiguidon')->nullable();
-            $table->string('noi_dung_don')->nullable();
+            $table->text('noi_dung_don')->nullable();
             $table->string('can_bo_thu_ly')->constrained('users')->nullable();
             $table->string('ket_qua_xu_ly')->nullable();
             $table->date('ngay_tiep_nhan')->nullable();
             $table->date('han_xu_ly')->nullable();
-            $table->string('trang_thai')->nullable();   
+            $table->string('trang_thai')->nullable(); 
+            $table->text('kho_khan')->nullable();
             $table->timestamps();
         });
     }

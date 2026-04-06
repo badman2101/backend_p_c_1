@@ -41,12 +41,13 @@ class DonthuController extends Controller
             'phan_loai' => 'nullable|string|max:255',
             'nguon_tin' => 'nullable|string|max:255',
             'information_nguoiguidon' => 'nullable|string|max:255',
-            'noi_dung_don' => 'nullable|string|max:255',
+            'noi_dung_don' => 'nullable',
             'can_bo_thu_ly' => 'nullable|string|max:255',
             'ket_qua_xu_ly' => 'nullable|string|max:255',
             'ngay_tiep_nhan' => 'nullable|date',
             'han_xu_ly' => 'nullable|date',
             'trang_thai' => 'nullable|string|max:255',
+            'kho_khan' =>'nullable'
         ]);
 
         if ($validator->fails()) {
@@ -94,12 +95,13 @@ class DonthuController extends Controller
             'phan_loai' => 'sometimes|nullable|string|max:255',
             'nguon_tin' => 'sometimes|nullable|string|max:255',
             'information_nguoiguidon' => 'sometimes|nullable|string|max:255',
-            'noi_dung_don' => 'sometimes|nullable|string|max:255',
+            'noi_dung_don' => 'sometimes|nullable',
             'can_bo_thu_ly' => 'sometimes|nullable|string|max:255',
             'ket_qua_xu_ly' => 'sometimes|nullable|string|max:255',
             'ngay_tiep_nhan' => 'sometimes|nullable|date',
             'han_xu_ly' => 'sometimes|nullable|date',
             'trang_thai' => 'sometimes|nullable|string|max:255',
+            'kho_khan' =>'sometimes|nullable',
         ]);
 
         if ($validator->fails()) {

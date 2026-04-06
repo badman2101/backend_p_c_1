@@ -19,26 +19,26 @@ class LoginController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'email|required',
+                'username' => 'required|string',
                 'password' => 'required'
             ]);
 
-            $credentials = request(['email', 'password']);
+            $credentials = $request->only(['username', 'password']);
 
             if (!Auth::attempt($credentials)) {
                 return response()->json([
-                    'status_code' => 500,
+                    'status_code' => 401,
                     'message' => 'Unauthorized'
-                ]);
+                ], 401);
             }
 
-            $user = User::where('email', $request->email)->first();
+            $user = User::where('username', $request->username)->first();
 
-            if (!Hash::check($request->password, $user->password, [])) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'status_code' => 403,
                     'message' => "Login fails"
-                ]);
+                ], 403);
             }
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
