@@ -47,6 +47,7 @@ class DonthuController extends Controller
             'ngay_tiep_nhan' => 'nullable|date',
             'han_xu_ly' => 'nullable|date',
             'trang_thai' => 'nullable|string|max:255',
+            'can_bo_huong_dan' => 'nullable',
             'kho_khan' =>'nullable'
         ]);
 
@@ -102,6 +103,7 @@ class DonthuController extends Controller
             'han_xu_ly' => 'sometimes|nullable|date',
             'trang_thai' => 'sometimes|nullable|string|max:255',
             'kho_khan' =>'sometimes|nullable',
+            'can_bo_huong_dan' => 'sometimes,nullable',
         ]);
 
         if ($validator->fails()) {

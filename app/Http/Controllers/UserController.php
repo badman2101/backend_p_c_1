@@ -68,6 +68,7 @@ class UserController extends Controller
                 'email' => $request->email,
                 'username' => $request->username, 
                 'name' => $request->name,
+                'don_vi'=>$request->don_vi,
             ]);
             return response()->json([
                 'status' => HttpResponse::HTTP_OK,

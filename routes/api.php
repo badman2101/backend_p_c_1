@@ -8,6 +8,7 @@ use App\Http\Controllers\UserRegisterCourseController;
 use App\Http\Controllers\ComplainsController;
 use App\Http\Controllers\DonthuController;
 use App\Http\Controllers\NguontinController;
+use App\Http\Controllers\DonviController;
  
 
 
@@ -38,3 +39,6 @@ Route::apiResource('/complains', ComplainsController::class);
 Route::apiResource('/donthu', DonthuController::class);
 
 Route::apiResource('/nguon_tin', NguontinController::class);
+
+// API quản lý đơn vị: GET/POST /api/donvi, GET/PUT/PATCH/DELETE /api/donvi/{id}
+Route::apiResource('/donvi', DonviController::class);
