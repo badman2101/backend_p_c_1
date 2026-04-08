@@ -19,6 +19,7 @@ class CreateNguontinTable extends Migration
             $table->text("noi_dung")->nullable();
             $table->string("dieu_tra_vien")->nullable();
             $table->string("ket_qua")->nullable();
+            $table->string('can_bo_huong_dan')->constrained('users')->nullable();
             $table->timestamps();
         });
     }

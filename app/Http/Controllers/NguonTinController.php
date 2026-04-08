@@ -63,6 +63,7 @@ class NguonTinController extends Controller
             'noi_dung' => ['required'],
             'dieu_tra_vien' => ['required', 'string', 'max:255'],
             'ket_qua' => ['max:255'],
+            'can_bo_huong_dan'=>['max:255'],
         ]);
 
         $nguonTin = Nguontin::create($validated);
@@ -91,6 +92,7 @@ class NguonTinController extends Controller
             'noi_dung' => ['sometimes', 'required'],
             'dieu_tra_vien' => ['sometimes', 'required', 'string', 'max:255'],
             'ket_qua' => ['max:255'],
+            'can_bo_huong_dan'=>['max:255'],
         ]);
 
         $nguonTin->fill($validated);

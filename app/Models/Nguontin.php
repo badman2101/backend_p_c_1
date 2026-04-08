@@ -16,7 +16,8 @@ class Nguontin extends Model
         'ngay_phan_cong',
         'noi_dung',
         'dieu_tra_vien',
-        'ket_qua'
+        'ket_qua',
+        'can_bo_huong_dan'
     ];
 
     public function user()
