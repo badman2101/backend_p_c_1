@@ -25,7 +25,7 @@ class AdminUserSeeder extends Seeder
                 'role' => 'admin',
                 'phone' => '0909090909',
                 'username' => 'admin',
-                'don_vi' => 'PC01'
+                'don_vi' => '1'
             ]
         );
     }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Donthu;
+use App\Models\Nguontin;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Validator;
@@ -56,7 +58,9 @@ class DonthuController extends Controller
         }
 
         try {
-            Donthu::create($validator->validated());
+            $payload = $this->applyResolvedStatus($validator->validated());
+            $donthu = Donthu::create($payload);
+            $this->createNguonTinIfNeeded($donthu);
 
             return response()->json([
                 'status' => HttpResponse::HTTP_OK,
@@ -103,20 +107,70 @@ class DonthuController extends Controller
             'han_xu_ly' => 'sometimes|nullable|date',
             'trang_thai' => 'sometimes|nullable|string|max:255',
             'kho_khan' =>'sometimes|nullable',
-            'can_bo_huong_dan' => 'sometimes,nullable',
+            'can_bo_huong_dan' => 'sometimes|nullable',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors(), 422);
         }
 
-        $donthu->update($validator->validated());
+        $payload = $this->applyResolvedStatus($validator->validated());
+        $donthu->update($payload);
+        $this->createNguonTinIfNeeded($donthu->fresh());
 
         return response()->json([
             'status' => HttpResponse::HTTP_OK,
             'message' => 'Cập nhật đơn thư thành công',
             'data' => $donthu->fresh(),
         ], HttpResponse::HTTP_OK);
+    }
+
+    /**
+     * Nếu kết quả xử lý là "Đưa vào nguồn tin" thì tự động tạo bản ghi nguồn tin.
+     */
+    private function createNguonTinIfNeeded(Donthu $donthu): void
+    {
+        if (trim((string) $donthu->ket_qua_xu_ly) !== 'Đưa vào nguồn tin') {
+            return;
+        }
+
+        Nguontin::create([
+            'ngay_phan_cong' => now(),
+            'noi_dung' => $donthu->noi_dung_don,
+            'dieu_tra_vien' => $donthu->can_bo_thu_ly,
+            // 'ket_qua' => $donthu->ket_qua_xu_ly,
+            'can_bo_huong_dan' => $donthu->can_bo_huong_dan,
+        ]);
+    }
+
+    /**
+     * Chuẩn hóa ngày phân công theo định dạng d/m/Y trước khi lưu nguồn tin.
+     */
+    private function formatNgayPhanCong($ngayTiepNhan): ?string
+    {
+        if (!$ngayTiepNhan) {
+            return null;
+        }
+
+        try {
+            return Carbon::parse($ngayTiepNhan)->format('d/m/Y');
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Nếu đã có kết quả xử lý thì tự động chuyển trạng thái sang "Đã giải quyết".
+     */
+    private function applyResolvedStatus(array $payload): array
+    {
+        $ketQua = trim((string) ($payload['ket_qua_xu_ly'] ?? ''));
+
+        if ($ketQua !== '') {
+            $payload['trang_thai'] = 'Đã giải quyết';
+        }
+
+        return $payload;
     }
 
     /**
