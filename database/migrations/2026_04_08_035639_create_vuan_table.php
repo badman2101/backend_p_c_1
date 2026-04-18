@@ -23,6 +23,7 @@ class CreateVuanTable extends Migration
             $table->string('can_bo_huong_dan')->constrained('users')->nullable();
             $table->string('ket_qua')->nullable();
             $table->text('kho_khan')->nullable();
+            $table->text('bien_phap_ngan_chan')->nullable();
             $table->timestamps();
         });
     }

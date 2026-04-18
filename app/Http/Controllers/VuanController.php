@@ -25,7 +25,8 @@ class VuanController extends Controller
                     ->orWhere('thong_tin_bi_can', 'like', "%{$q}%")
                     ->orWhere('ket_qua', 'like', "%{$q}%")
                     ->orWhere('can_bo_thu_ly', 'like', "%{$q}%")
-                    ->orWhere('can_bo_huong_dan', 'like', "%{$q}%");
+                    ->orWhere('can_bo_huong_dan', 'like', "%{$q}%")
+                    ->orWhere('bien_phap_ngan_chan', 'like', "%{$q}%");
             });
         }
 
@@ -67,7 +68,8 @@ class VuanController extends Controller
             'can_bo_thu_ly' => ['nullable', 'string', 'max:255'],
             'can_bo_huong_dan' => ['nullable', 'string', 'max:255'],
             'ket_qua' => ['nullable', 'string', 'max:255'],
-            'kho_khan' => ['nullable', 'string', 'max:255'],
+            'kho_khan' => ['nullable', 'string'],
+            'bien_phap_ngan_chan' => ['nullable'],
         ]);
 
         $vuan = Vuan::create($validated);
@@ -100,6 +102,7 @@ class VuanController extends Controller
             'can_bo_huong_dan' => ['sometimes', 'nullable', 'string', 'max:255'],
             'ket_qua' => ['sometimes', 'nullable', 'string', 'max:255'],
             'kho_khan' => ['sometimes', 'nullable', 'string'],
+            'bien_phap_ngan_chan' => ['sometimes','nullable'],
         ]);
 
         $vuan->fill($validated);

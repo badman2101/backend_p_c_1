@@ -16,6 +16,7 @@ class Vuan extends Model
         'noi_dung',
         'so_luong_bi_can',
         'thong_tin_bi_can',
+        'bien_phap_ngan_chan',
         'can_bo_thu_ly',
         'can_bo_huong_dan',
         'ket_qua',
