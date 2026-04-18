@@ -7,7 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserRegisterCourseController;
 use App\Http\Controllers\ComplainsController;
 use App\Http\Controllers\DonthuController;
-use App\Http\Controllers\NguontinController;
+use App\Http\Controllers\NguonTinController;
 use App\Http\Controllers\DonviController;
 use App\Http\Controllers\VuanController;
  
@@ -39,7 +39,7 @@ Route::apiResource('/complains', ComplainsController::class);
 // API quản lý đơn thư: GET/POST /api/donthu, GET/PUT/PATCH/DELETE /api/donthu/{id}
 Route::apiResource('/donthu', DonthuController::class);
 
-Route::apiResource('/nguon_tin', NguontinController::class);
+Route::apiResource('/nguon_tin', NguonTinController::class);
 
 // API quản lý đơn vị: GET/POST /api/donvi, GET/PUT/PATCH/DELETE /api/donvi/{id}
 Route::apiResource('/donvi', DonviController::class);
