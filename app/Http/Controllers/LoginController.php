@@ -88,4 +88,22 @@ class LoginController extends Controller
             ], Response::HTTP_BAD_REQUEST);
         }
     }
+
+    public function logout(Request $request)
+    {
+        try {
+            $request->user()->currentAccessToken()->delete();
+
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Logout successful'
+            ]);
+        } catch (\Exception $error) {
+            return response()->json([
+                'status_code' => 500,
+                'message' => 'Error in Logout',
+                'error' => $error,
+            ], 500);
+        }
+    }
 }
