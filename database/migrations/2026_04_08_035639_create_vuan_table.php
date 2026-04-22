@@ -17,6 +17,8 @@ class CreateVuanTable extends Migration
             $table->id();
             $table->date('ngay_khoi_to')->nullable();
             $table->text('noi_dung')->nullable();
+            $table->string('phan_loai')->nullable();
+            $table->date("han_xu_ly")->nullable();
             $table->string('so_luong_bi_can')->nullable();
             $table->text('thong_tin_bi_can')->nullable();
             $table->string('can_bo_thu_ly')->constrained('users')->nullable();

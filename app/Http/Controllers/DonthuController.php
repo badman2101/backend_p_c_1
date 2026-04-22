@@ -59,6 +59,7 @@ class DonthuController extends Controller
 
         try {
             $payload = $this->applyResolvedStatus($validator->validated());
+            $payload = $this->applyProcessingDeadline($payload);
             $donthu = Donthu::create($payload);
             $this->createNguonTinIfNeeded($donthu);
 
@@ -115,6 +116,7 @@ class DonthuController extends Controller
         }
 
         $payload = $this->applyResolvedStatus($validator->validated());
+        $payload = $this->applyProcessingDeadline($payload);
         $donthu->update($payload);
         $this->createNguonTinIfNeeded($donthu->fresh());
 
@@ -169,6 +171,20 @@ class DonthuController extends Controller
         if ($ketQua !== '') {
             $payload['trang_thai'] = 'Đã giải quyết';
         }
+
+        return $payload;
+    }
+
+    /**
+     * Hạn xử lý được tính bằng ngày tiếp nhận cộng thêm 2 tháng.
+     */
+    private function applyProcessingDeadline(array $payload): array
+    {
+        if (empty($payload['ngay_tiep_nhan'])) {
+            return $payload;
+        }
+
+        $payload['han_xu_ly'] = Carbon::parse($payload['ngay_tiep_nhan'])->addMonthsNoOverflow(2);
 
         return $payload;
     }

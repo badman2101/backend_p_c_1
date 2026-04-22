@@ -14,10 +14,16 @@ class Nguontin extends Model
 
     protected $fillable  = [
         'ngay_phan_cong',
+        'han_xu_ly',
         'noi_dung',
         'dieu_tra_vien',
         'ket_qua',
         'can_bo_huong_dan'
+    ];
+
+    protected $casts = [
+        'ngay_phan_cong' => 'date',
+        'han_xu_ly' => 'date',
     ];
 
     public function user()

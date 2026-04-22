@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Models\Nguontin;
+use App\Models\Vuan;
+use Carbon\Carbon;
 
 class NguonTinController extends Controller
 {
@@ -59,14 +61,17 @@ class NguonTinController extends Controller
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate([
-            'ngay_phan_cong' => ['required', 'string', 'max:255'],
+            'ngay_phan_cong' => ['required', 'date'],
             'noi_dung' => ['required'],
             'dieu_tra_vien' => ['required', 'string', 'max:255'],
             'ket_qua' => ['max:255'],
             'can_bo_huong_dan'=>['max:255'],
         ]);
+        
 
+        $validated = $this->applyProcessingDeadline($validated);
         $nguonTin = Nguontin::create($validated);
+        $this->createVuanIfNeeded($nguonTin);
 
         return response()->json([
             'message' => 'Tạo nguồn tin thành công',
@@ -88,15 +93,17 @@ class NguonTinController extends Controller
         }
 
         $validated = $request->validate([
-            'ngay_phan_cong' => ['sometimes', 'required', 'string', 'max:255'],
+            'ngay_phan_cong' => ['sometimes', 'required', 'date'],
             'noi_dung' => ['sometimes', 'required'],
             'dieu_tra_vien' => ['sometimes', 'required', 'string', 'max:255'],
             'ket_qua' => ['max:255'],
             'can_bo_huong_dan'=>['max:255'],
         ]);
 
+        $validated = $this->applyProcessingDeadline($validated);
         $nguonTin->fill($validated);
         $nguonTin->save();
+        $this->createVuanIfNeeded($nguonTin->fresh());
 
         return response()->json([
             'message' => 'Cập nhật nguồn tin thành công',
@@ -122,5 +129,50 @@ class NguonTinController extends Controller
         return response()->json([
             'message' => 'Xóa nguồn tin thành công',
         ]);
+    }
+
+    /**
+     * Hạn xử lý được tính bằng ngày nhận tin cộng thêm 2 tháng.
+     */
+    private function applyProcessingDeadline(array $payload): array
+    {
+        if (empty($payload['ngay_phan_cong'])) {
+            return $payload;
+        }
+
+        $payload['han_xu_ly'] = Carbon::parse($payload['ngay_phan_cong'])->addMonthsNoOverflow(2);
+
+        return $payload;
+    }
+
+    /**
+     * Nếu kết quả nguồn tin là "Khởi tố" thì tự tạo vụ án.
+     */
+    private function createVuanIfNeeded(Nguontin $nguonTin): void
+    {
+        if (trim($nguonTin->ket_qua) !== "Khởi tố") {
+            return;
+        }
+
+        Vuan::firstOrCreate(
+            [
+                'ngay_khoi_to' => $nguonTin->ngay_phan_cong,
+                'noi_dung' => $nguonTin->noi_dung,
+                'can_bo_thu_ly' => $nguonTin->dieu_tra_vien,
+            ],
+            [
+                // 'han_xu_ly' => $nguonTin->han_xu_ly,
+                'can_bo_huong_dan' => $nguonTin->can_bo_huong_dan,
+                'ket_qua' => $nguonTin->ket_qua,
+            ]
+        );
+    }
+
+    /**
+     * Chỉ chấp nhận đúng giá trị "Khởi tố" (không nhận biến thể).
+     */
+    private function isKhoiToResult(?string $ketQua): bool
+    {
+        return mb_strtolower(trim((string) $ketQua)) == 'Khởi tố';
     }
 }

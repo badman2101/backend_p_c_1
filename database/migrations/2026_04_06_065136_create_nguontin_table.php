@@ -15,7 +15,8 @@ class CreateNguontinTable extends Migration
     {
         Schema::create('nguontin', function (Blueprint $table) {
             $table->id();
-            $table->string("ngay_phan_cong")->nullable();
+            $table->date("ngay_phan_cong")->nullable();
+            $table->date("han_xu_ly")->nullable();
             $table->text("noi_dung")->nullable();
             $table->string("dieu_tra_vien")->nullable();
             $table->string("ket_qua")->nullable();

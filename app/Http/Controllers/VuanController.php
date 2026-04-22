@@ -5,9 +5,35 @@ namespace App\Http\Controllers;
 use App\Models\Vuan;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class VuanController extends Controller
 {
+    /**
+     * Tính hạn xử lý theo phân loại và ngày khởi tố.
+     */
+    private function calculateHanXuLy(?string $ngayKhoiTo, ?string $phanLoai): ?string
+    {
+        if (!$ngayKhoiTo || !$phanLoai) {
+            return null;
+        }
+
+        $monthsByPhanLoai = [
+            'Tội phạm ít nghiêm trọng' => 2,
+            'Tội phạm nghiêm trọng' => 3,
+            'Tội phạm rất nghiêm trọng' => 4,
+            'Tội phạm đặc biệt nghiêm trọng' => 4,
+        ];
+
+        if (!isset($monthsByPhanLoai[$phanLoai])) {
+            return null;
+        }
+
+        return Carbon::parse($ngayKhoiTo)
+            ->addMonths($monthsByPhanLoai[$phanLoai])
+            ->toDateString();
+    }
+
     /**
      * Danh sách vụ án (tìm kiếm tùy chọn).
      *
@@ -63,6 +89,7 @@ class VuanController extends Controller
         $validated = $request->validate([
             'ngay_khoi_to' => ['nullable', 'date'],
             'noi_dung' => ['nullable', 'string'],
+            'phan_loai' => ['nullable', 'string', 'max:255'],
             'so_luong_bi_can' => ['nullable', 'string', 'max:255'],
             'thong_tin_bi_can' => ['nullable'],
             'can_bo_thu_ly' => ['nullable', 'string', 'max:255'],
@@ -71,6 +98,11 @@ class VuanController extends Controller
             'kho_khan' => ['nullable', 'string'],
             'bien_phap_ngan_chan' => ['nullable'],
         ]);
+
+        $validated['han_xu_ly'] = $this->calculateHanXuLy(
+            $validated['ngay_khoi_to'] ?? null,
+            $validated['phan_loai'] ?? null
+        );
 
         $vuan = Vuan::create($validated);
 
@@ -96,6 +128,7 @@ class VuanController extends Controller
         $validated = $request->validate([
             'ngay_khoi_to' => ['sometimes', 'nullable', 'date'],
             'noi_dung' => ['sometimes', 'nullable', 'string'],
+            'phan_loai' => ['sometimes', 'nullable', 'string', 'max:255'],
             'so_luong_bi_can' => ['sometimes', 'nullable', 'string', 'max:255'],
             'thong_tin_bi_can' => ['sometimes', 'nullable', 'string'],
             'can_bo_thu_ly' => ['sometimes', 'nullable', 'string', 'max:255'],
@@ -104,6 +137,16 @@ class VuanController extends Controller
             'kho_khan' => ['sometimes', 'nullable', 'string'],
             'bien_phap_ngan_chan' => ['sometimes','nullable'],
         ]);
+
+        $ngayKhoiTo = array_key_exists('ngay_khoi_to', $validated)
+            ? $validated['ngay_khoi_to']
+            : $vuan->ngay_khoi_to?->toDateString();
+
+        $phanLoai = array_key_exists('phan_loai', $validated)
+            ? $validated['phan_loai']
+            : $vuan->phan_loai;
+
+        $validated['han_xu_ly'] = $this->calculateHanXuLy($ngayKhoiTo, $phanLoai);
 
         $vuan->fill($validated);
         $vuan->save();

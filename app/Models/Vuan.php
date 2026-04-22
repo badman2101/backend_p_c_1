@@ -14,6 +14,8 @@ class Vuan extends Model
     protected $fillable = [
         'ngay_khoi_to',
         'noi_dung',
+        'phan_loai',
+        'han_xu_ly',
         'so_luong_bi_can',
         'thong_tin_bi_can',
         'bien_phap_ngan_chan',
