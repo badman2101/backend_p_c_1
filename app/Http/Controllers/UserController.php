@@ -10,9 +10,12 @@ use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+// use Laravel\Sanctum\HasApiTokens;
+
 
 class UserController extends Controller
 {
+    // use HasApiTokens, HasFactory, Notifiable;
     /**
      * Display a listing of the resource.
      *
